@@ -9,7 +9,7 @@ and natural selection— a complex ecosystem arises, complete with distinct
 survival strategies, evolutionary trade-offs, and dynamic population cycles.
 
 # Index
-1. [How did I get the idea](#How did I get the idea)
+1. [How did I get the idea](#how-did-i-get-the-idea)
 
 # How did I get the idea
 
