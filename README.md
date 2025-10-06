@@ -74,9 +74,10 @@ Make sure you have Python 3.9 or newer installed.
 
 First, clone this repository to your local machine:
 
-Bash
-git clone https://github.com/YOUR_USERNAME/A-Ecosystem.git
+```
+git clone https://github.com/Thrinkler/A-Ecosystem.git
 cd A-Ecosystem
+```
 2. Create and Activate a Virtual Environment (optional, but recommended)
 
 ```
