@@ -1,6 +1,6 @@
-# A-Ecosystem
 
 ![Atari_photo](assets/atari_cover.png)
+
 (Oh my God, I'm a freaking fan of Atari covers)
 
 
