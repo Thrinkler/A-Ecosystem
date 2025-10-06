@@ -3,7 +3,7 @@ import random
 
 class Food(pygame.sprite.Sprite):
     def __init__(self, x, y,color):
-        self.rect = pygame.Rect(x,y,5,5)
+        self.rect = pygame.Rect(x,y,8,8)
         self.color = color
         self.time = 0
         self.child_time = 150+ random.randint(-100,100)
