@@ -10,7 +10,7 @@ survival strategies, evolutionary trade-offs, and dynamic population cycles.
 
 # Index
 1. [How did I get the idea](#how-did-i-get-the-idea)
-2. [Characteristics](#characteristics)
+2. [Characteristics](#key-features)
 3. [Gallery](#gallery)
 4. [How does it work](#how-does-it-work)
 5. [Installation and usage](#installation-and-usage)
@@ -31,7 +31,7 @@ I have to admit, I thought it would take longer. It had to... I didn't wait five
 
 Well, after the code was done, I decided to graph the simulation's data to get more insight, maybe for a school presentation. That's when I discovered the project's true depth: the unpredictability of the environment, how it behaved like a real population, and the realization that this was anything but a simple project.
 
-# Characteristics
+# Key Features:
 
 - **Evolution by Natural Selection**:
     Robots must eat to survive and reproduce. Only the fittest pass their genes on, while the unfit are removed from the simulation.
@@ -52,15 +52,17 @@ Well, after the code was done, I decided to graph the simulation's data to get m
 
 # How does it work
 
+All of the work is done by the robots and their genes. When they reproduce, its offspring inherits these genes with a slight chance of mutation, so that the population will adapt over generations. 
+
 The primary genes are:
 
-- velocity: Determines the robot's top speed. High speed is great for covering long distances but comes at a higher energy cost, requiring more frequent feeding.
+- velocity: Determines the robot's speed. The robot will move at this speed without a chance to stop. It comes great to cover long distances to get more food, but comes at a higher energy cost, requiring more frequent feeding.
 
-- rot_vel (Rotational Velocity): Governs how quickly the robot can turn. High agility is crucial for reacting to nearby food and navigating crowded spaces.
+- rot_vel (Rotational Velocity): It tells how quickly the robot can turn. High agility is crucial for reacting to nearby food and to have a lower radius for getting food.
 
 - vision: The radius within which a robot can detect food. A wide field of view allows for better long-term planning, but the simulation has shown that this trait often comes with evolutionary trade-offs.
 
-- prob_fail_rot (Rotation Failure Probability): A measure of the robot's "clumsiness." This trait often evolves as an unintended side effect of other genetic changes, creating interesting evolutionary pressures.
+- prob_fail_rot (Rotation Failure Probability): Represents the robot's clumsinnes. This trait often causes the robot to "loose" the food for a second, but can occasionally result in an unexpected maneuver to go for the food.
 
 # Installation and usage
 
@@ -131,4 +133,4 @@ If you have an idea for an improvement, please follow these steps:
 You can also simply open an issue with the tag "enhancement" to discuss a new feature or idea.
 
 # Licence
-This project is distributed under the MIT License. See the LICENSE file for more information.
+This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for more information.
