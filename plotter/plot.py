@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-msft = pd.read_csv('logs/sp_44.csv')
+msft = pd.read_csv('logs/5.csv')
 time = range(len(msft))
 
 def time_plot():
@@ -17,7 +17,7 @@ def time_plot():
     plt.plot(time, msft['avg_rot_vel']*50)
     plt.plot(time, msft['avg_vision']*5)
     plt.plot(time, msft['avg_fail_rot']*5)
-    plt.legend(['Food Count', 'Robot Count', 'Avg Speed', 'Avg Rot Vel', 'Avg Vision', 'Avg Fail Rot'])
+    plt.legend(['Food Count', 'Robot Count', 'Avg Speed x50', 'Avg Rot Vel x50', 'Avg Vision x5', 'Avg Fail Rot x5'])
     plt.title('Time vs Robots characteristics and food count')
     plt.grid(True)
     plt.show()

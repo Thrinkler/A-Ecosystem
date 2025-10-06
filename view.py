@@ -11,7 +11,7 @@ from pygame.locals import *
 	
 pygame.init()
 
-FPS = 9000
+FPS = 90
 FramePerSec = pygame.time.Clock()
  
 # Predefined some colors
@@ -37,8 +37,8 @@ def start():
     creator = robot_creator.Creator(10,100)
     creator.P.append(robot.Robot(999,500,400,creator.F,velocity=10,rot_vel=10,vision=200,life=1000,prob_fail_rot=0))
     while True:
-        if time == 15000:
-            os.rename(creator.file.name, "logs/sp_" + creator.file.name.split("/")[-1])
+        #if time == 15000:
+            #os.rename(creator.file.name, "logs/sp_" + creator.file.name.split("/")[-1])
         if len(creator.P)== 1:
             
             creator.file.close()

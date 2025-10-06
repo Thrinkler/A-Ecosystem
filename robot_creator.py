@@ -29,7 +29,8 @@ class Creator:
         self.avg_vision = self.avg_vision/len(self.P) if len(self.P) > 0 else 0
         self.avg_fail_rot = self.avg_fail_rot/len(self.P) if len(self.P) > 0 else 0
 
-        self.file.write(str(len(self.F))+","+ str(len(self.P))+ "," + str(self.avg_velocity) + "," + str(self.avg_rot_vel) + "," + str(self.avg_vision) + "," + str(self.avg_fail_rot) + "\n")
+        if(self.avg_velocity > 0 or self.avg_rot_vel > 0 or self.avg_vision > 0 or self.avg_fail_rot > 0):
+            self.file.write(str(len(self.F))+","+ str(len(self.P))+ "," + str(self.avg_velocity) + "," + str(self.avg_rot_vel) + "," + str(self.avg_vision) + "," + str(self.avg_fail_rot) + "\n")
         self.avg_velocity = 0
         self.avg_rot_vel = 0
         self.avg_vision = 0

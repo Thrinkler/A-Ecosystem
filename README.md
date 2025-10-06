@@ -8,6 +8,8 @@ This project showcases how, from a simple set of rules —genetic diversity
 and natural selection— a complex ecosystem arises, complete with distinct
 survival strategies, evolutionary trade-offs, and dynamic population cycles.
 
+![simulation](assets/simulation.gif)
+
 # Index
 1. [How did I get the idea](#how-did-i-get-the-idea)
 2. [Characteristics](#key-features)
