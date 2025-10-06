@@ -19,56 +19,115 @@ survival strategies, evolutionary trade-offs, and dynamic population cycles.
 
 
 # How did I get the idea
-About 5 years ago, while I was trying learn any AI stuff on YouTube, I found a video of a type of artificial
-ecosystem, where a bug tried to eat and reproduce. I was thrilled by it, and, as a 15 year old boy, i naively
-thought it would be an easy project to base myself on to make my own. Oh, how wrong I was.
+About five years ago, while I was trying to learn about AI on YouTube, I found a video of an artificial ecosystem where digital bugs would eat and reproduce. I was thrilled by it and, as a 15-year-old, I naively thought it would be an easy project to replicate. Oh, how wrong I was.
 
-Back then, I had no idea about what classes were, I tried to do everything in one giant
-function that returned a list of atributes, and every operation meant that I had to work inside
-that list (I didn't know how to use dictionaries). Needless to say... That project flopped as soon
-as I tried to add a new feature.
+Back then, I had no idea what classes were. I tried to build everything in one giant function that returned a list of attributes, and every operation meant wrestling directly with that list (I didn't even know how to use dictionaries). Needless to say, the project flopped the moment I tried to add a new feature.
 
-But as I got to study CS (and finally learnt about OOP by having Java as the only language I could use),
-I finally felt I had enough skills to get over this project. 
+But after I began studying Computer Science (and finally learned about OOP, thanks to a Java-only curriculum), I finally felt I had the skills to tackle this project again.
 
-So when I got a week off, I started working on this...
-I finished the first final version in 6 hours, and I think I watched a movie and ate around that time,
-so it was less than that.
+So when I got a week off, I started working on it. I finished the first complete version in about six hours—and that includes time for a movie and a meal.
 
-I mean, I thought it would take me longer, it had to... I didn't wait 5 years just to finish it in less
- than a day, right?
+I have to admit, I thought it would take longer. It had to... I didn't wait five years just to finish it in less than a day, right?
 
-Well. After the code was done, I tried to graph the simulation's data, just so that I could have some 
-more info, maybe for a school presentation. That's when I discovered the project's true depth: the 
-unpredictability of the environment, how it behaved like a real population, and the realization
-that this was anything but a simple project.
+Well, after the code was done, I decided to graph the simulation's data to get more insight, maybe for a school presentation. That's when I discovered the project's true depth: the unpredictability of the environment, how it behaved like a real population, and the realization that this was anything but a simple project.
 
 # Characteristics
 
 - **Evolution by Natural Selection**:
-    The robots live, eat, reproduce, and die. If they don't eat,
-    they can't reproduce.
+    Robots must eat to survive and reproduce. Only the fittest pass their genes on, while the unfit are removed from the simulation.
 
 - **Genetics for movement and vision**:
-    Every bot has a genome that defines their behavior
+    Each robot has a unique genome that defines its speed, agility, vision, and other behaviors that mutate over generations.
 
 - **Dynamic Ecosystem**:
-    The population of food and bots fluctuates, generating cycles of abundance and scarcity.
+    The population of robots and the availability of food fluctuate, creating emergent cycles of abundance ("boom") and scarcity ("bust").
 
 - **Data analysis**:
-    The simulation generates .csv files ready to be analyzed. You can use the integrated plotter,
-    or any tool you want to use.
+    The simulation automatically generates .csv log files, ready to be analyzed with the included plotting scripts or any tool of your choice.
 
 - **Real-time visualization**:
-    Using pygame, you can watch the simulation as it happens!
+    Built with Pygame, allowing you to watch the simulation.
 
 # Gallery
 
 # How does it work
 
+The primary genes are:
+
+- velocity: Determines the robot's top speed. High speed is great for covering long distances but comes at a higher energy cost, requiring more frequent feeding.
+
+- rot_vel (Rotational Velocity): Governs how quickly the robot can turn. High agility is crucial for reacting to nearby food and navigating crowded spaces.
+
+- vision: The radius within which a robot can detect food. A wide field of view allows for better long-term planning, but the simulation has shown that this trait often comes with evolutionary trade-offs.
+
+- prob_fail_rot (Rotation Failure Probability): A measure of the robot's "clumsiness." This trait often evolves as an unintended side effect of other genetic changes, creating interesting evolutionary pressures.
+
 # Installation and usage
 
+Follow these steps to get the simulation running on your local machine.
+
+Prerequisites
+
+Make sure you have Python 3.9 or newer installed.
+
+1. Clone the Repository
+
+First, clone this repository to your local machine:
+
+Bash
+git clone https://github.com/YOUR_USERNAME/A-Ecosystem.git
+cd A-Ecosystem
+2. Create and Activate a Virtual Environment (optional, but recommended)
+
+```
+# Create the virtual environment
+python3 -m venv venv
+
+# Activate it (macOS/Linux)
+source venv/bin/activate
+
+# Or activate it (Windows)
+.\venv\Scripts\activate
+```
+
+3. Install Dependencies
+
+Install all the required libraries using the requirements.txt file:
+
+```
+pip install -r requirements.txt
+```
+
+4. Run the Simulation
+
+To start the simulation with the real-time visualizer, run:
+
+```
+python main.py
+```
+
+Log files (.csv) will be automatically generated in the logs/ directory. You can analyze them using the scripts found in the analysis/ folder or with your own tools.
+
+```
+python plotter/plot.py
+```
+
 # How to contribute
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+If you have an idea for an improvement, please follow these steps:
+
+1. Fork the Project.
+
+2. Create your Feature Branch (git checkout -b feature/AmazingFeature).
+
+3. Commit your Changes (git commit -m 'Add some AmazingFeature').
+
+4. Push to the Branch (git push origin feature/AmazingFeature).
+
+5. Open a Pull Request.
+
+You can also simply open an issue with the tag "enhancement" to discuss a new feature or idea.
 
 # Licence
-
+This project is distributed under the MIT License. See the LICENSE file for more information.
