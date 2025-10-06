@@ -1,17 +1,22 @@
-import food
 import pygame
 import math
 import random
 
+from . import food
+from . import food_sorter
+
 class Robot(pygame.sprite.Sprite):
-    def __init__(self, id: int,x:int,y:int, food:list[food.Food], velocity=2.0, rot_vel=2.0, vision = 80, life = 500, prob_fail_rot =70) -> None:
+    def __init__(self, id: int,x:int,y:int, food:list[food.Food],dict_food: food_sorter.FoodSorter, velocity=2.0, rot_vel=2.0, vision = 80, life = 500, prob_fail_rot =70) -> None:
         super().__init__() 
         self.id = id
         self.rect = pygame.Rect(x,y,8,8)
         self.color = pygame.Color(((50+int(velocity)*20) if velocity*20 < 200 else 255,\
                                    (vision) if vision < 250 else 255,\
                                    (50+int(rot_vel)*20 if rot_vel*20 < 200 else 255)))
+        
         self.food = food
+        self.dict_food = dict_food
+
         self.angle = random.uniform(0,2*math.pi)
         
         self.velocity = velocity
@@ -39,18 +44,67 @@ class Robot(pygame.sprite.Sprite):
         return [self.food[ind].rect.x - self.rect.x, self.food[ind].rect.y - self.rect.y]
     
 
-    def closest_food(self):
+    def find_closest_food(self,food_list: list[food.Food]):
         
         x,y = self.vector_to_food(self.closest)
         closest_distance = math.inf
 
-        for i in range(len(self.food)):
+        if len(food_list)==0:
+            self.closest = 0
+
+        for food in food_list:
+            i = self.food.index(food)
             x,y = self.vector_to_food(i)
             if x**2 + y**2 < closest_distance:
                 closest_distance = x**2 + y**2
                 self.closest = i
 
+
+    def closest_food(self):
+        close_food = []
+        if (self.rect.x//self.dict_food.grid_size,self.rect.y//self.dict_food.grid_size) in self.dict_food.food_dic:
+            close_food = close_food + self.dict_food.food_dic[(self.rect.x//self.dict_food.grid_size,self.rect.y//self.dict_food.grid_size)]
+
+        for i in range(1,self.vision//(2*self.dict_food.grid_size)):
+            if len(close_food) > 1:
+                break
+            for j in range(-i,i+1):
+                y = i+(self.rect.y//self.dict_food.grid_size)
+                x = j+(self.rect.x//self.dict_food.grid_size)
+                if (x,y) in self.dict_food.food_dic:
+                    close_food = close_food + self.dict_food.food_dic[(x,y)]
+
+                y = -i+(self.rect.y//self.dict_food.grid_size)
+                x = -j+(self.rect.x//self.dict_food.grid_size)
+                if (x,y) in self.dict_food.food_dic:
+                    close_food = close_food + self.dict_food.food_dic[(x,y)]
+
+            for j in range(-i+1,i):
+                y = j+(self.rect.y//self.dict_food.grid_size)
+                x = i+(self.rect.x//self.dict_food.grid_size)
+                if (x,y) in self.dict_food.food_dic:
+                    close_food = close_food + self.dict_food.food_dic[(x,y)]
+
+                y = -j+(self.rect.y//self.dict_food.grid_size)
+                x = -i+(self.rect.x//self.dict_food.grid_size)
+                if (x,y) in self.dict_food.food_dic:
+                    close_food = close_food + self.dict_food.food_dic[(x,y)]
+
+        """       
+        for i in range((self.rect.x - self.vision//2)//self.dict_food.grid_size, (self.rect.x + self.vision//2)//self.dict_food.grid_size):
+            for j in range((self.rect.y - self.vision//2)//self.dict_food.grid_size, (self.rect.y + self.vision//2)//self.dict_food.grid_size):
+                if (i,j) in self.dict_food.food_dic:
+                    close_food = close_food + self.dict_food.food_dic[(i,j)]
+        """
+        self.find_closest_food(close_food)
     
+
+    def square(self):
+        for i in range(0,self.vision):
+            for j in range(0,i):
+                pass
+
+
     def angle_to_food(self, ind):
         x,y = self.vector_to_food(ind)
 

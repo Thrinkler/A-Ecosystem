@@ -3,15 +3,15 @@ import sys
 import random
 import os
 
-import robot
-import food
-import robot_creator
+from . import robot
+from . import food
+from . import robot_creator
 
-from pygame.locals import *
+from pygame.locals import QUIT
 	
 pygame.init()
 
-FPS = 90
+FPS = 900000
 FramePerSec = pygame.time.Clock()
  
 # Predefined some colors
@@ -35,7 +35,6 @@ pygame.Rect((20, 50), (50, 100))
 def start():
     time = 0
     creator = robot_creator.Creator(10,100)
-    creator.P.append(robot.Robot(999,500,400,creator.F,velocity=10,rot_vel=10,vision=200,life=1000,prob_fail_rot=0))
     while True:
         #if time == 15000:
             #os.rename(creator.file.name, "logs/sp_" + creator.file.name.split("/")[-1])

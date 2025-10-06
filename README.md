@@ -118,7 +118,7 @@ pip install -r requirements.txt
 To start the simulation with the real-time visualizer, run:
 
 ```
-python src/main.py
+python -m src.main
 ```
 
 Log files (.csv) will be automatically generated in the logs/ directory. You can analyze them using the scripts found in the analysis/ folder or with your own tools.
