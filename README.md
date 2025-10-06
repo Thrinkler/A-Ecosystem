@@ -1,5 +1,7 @@
 # A-Ecosystem
 
+![Atari_photo](assets/atari_cover.png)
+
 A-Ecosystem (Artificial Ecosystem) is a digital laboratory where simple bots
 evolve to survive. These 'robots' compete for limited resources and, upon 
 gathering enough energy, pass their genetic traits to the next generation.
