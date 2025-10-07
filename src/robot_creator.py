@@ -90,9 +90,9 @@ class Creator:
                 self.P.pop(self.P.index(p))
         
 
-    def draw(self,surface):
+    def draw(self,surface, camera_offset=(0,0)):
         self.update()
         for p in self.P:
-            p.draw(surface)
+            p.draw(surface, camera_offset)
         for f in self.F:
-            f.draw(surface)
+            f.draw(surface, camera_offset)

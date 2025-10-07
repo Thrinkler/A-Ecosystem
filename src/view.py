@@ -3,6 +3,8 @@ import sys
 import random
 import os
 
+from . import camera
+
 from . import robot
 from . import food
 from . import robot_creator
@@ -46,7 +48,8 @@ def start():
                 sys.exit()
         DISPLAYSURF.fill(BLACK)
         time += 1
-        creator.draw(DISPLAYSURF)
+        camera_offset = camera.camera()
+        creator.draw(DISPLAYSURF, camera_offset)
         DISPLAYSURF.blit(pygame.font.SysFont("Verdana", 20).render("Robots: " + str(len(creator.P)) + ", Food: " + str(len(creator.F)), True, WHITE), (10,10))
         FramePerSec.tick(FPS) 
         pygame.display.update()

@@ -117,12 +117,12 @@ class Robot(pygame.sprite.Sprite):
             return self.angle + math.pi/2 * random.randint(-10,10)*0.1
         return math.atan2(y,x)* (1 if random.randint(0,100) < self.prob_fail_rot else 0)
         
-    def draw(self, surface):
+    def draw(self, surface, camera_offset=(0,0)):
 
         #x1,y1 = self.rect.x+self.rect.width//2 ,self.rect.y+self.rect.width//2 
         #x2, y2 = self.rect.x+self.rect.width//2+(math.cos(self.angle)*10*10),self.rect.y+self.rect.width//2+(math.sin(self.angle)*10*10)
 
-        pygame.draw.rect(surface, self.color, self.rect, width=0)
+        pygame.draw.rect(surface, self.color, self.rect.move(-camera_offset[0], -camera_offset[1]), width=0)
 
         #pygame.draw.line(surface,pygame.color.Color(0,0,0),(x1,y1),(x2,y2))
 

@@ -11,8 +11,8 @@ class Food(pygame.sprite.Sprite):
         self.death_time = FOOD_DEATH_TIME + random.randint(-450,500)
         self.can_reproduce = random.uniform(0, 1) > FOOD_CHILD_RATE
 
-    def draw(self, surface):
-        pygame.draw.rect(surface, self.color, self.rect, width=0)
+    def draw(self, surface, camera_offset=(0,0)):
+        pygame.draw.rect(surface, self.color, self.rect.move(-camera_offset[0], -camera_offset[1]), width=0)
         self.time += 1
 
     def gen_new(self):
