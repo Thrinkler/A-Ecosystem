@@ -31,6 +31,9 @@ MAX_FIRST_FAIL_ROT = config.getint('RobotGenetics', 'max_first_fail_rot')
 MUTATION_RATE = config.getfloat('RobotGenetics', 'mutation_rate')
 
 GRID_CELL_SIZE = config.getint('World', 'grid_cell_size')
+ROBOT_FIRST_SPECIES_COUNT = config.getint('World', 'robot_first_species_count')
+ROBOT_MIN_SPECIES_POP = config.getint('World', 'robot_min_species_pop')
+ROBOT_MAX_SPECIES_POP = config.getint('World', 'robot_max_species_pop')
 
 SPECIAL_NAME = config.getboolean('Logs', 'special_name')
 SPECIAL_MIN = config.getint('Logs','special_min')

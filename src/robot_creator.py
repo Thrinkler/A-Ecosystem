@@ -15,14 +15,9 @@ class Creator:
         self.F = [food.Food(random.randint(0,SCREEN_WIDTH),random.randint(0,SCREEN_HEIGHT),pygame.Color(0,255,0)) for _ in range(numFoods)]
         self.dic_F = food_sorter.FoodSorter(self.F)
 
-        self.P = [robot.Robot(i,random.randint(0,SCREEN_WIDTH),random.randint(0,SCREEN_HEIGHT), self.F, self.dic_F, \
-                    velocity=random.uniform(MIN_FIRST_VELOCITY,MAX_FIRST_VELOCITY), \
-                    rot_vel=random.uniform(MIN_FIRST_ROT_VELOCITY,MAX_FIRST_ROT_VELOCITY), \
-                    vision = random.randint(MIN_FIRST_VISION,MAX_FIRST_VISION),\
-                    prob_fail_rot= random.randint(MIN_FIRST_FAIL_ROT,MAX_FIRST_FAIL_ROT),
-                    life=random.randint(MIN_LIFE,MAX_LIFE))\
-                    for i in range(numRobots)]
-
+        self.P = []
+        for i in range(ROBOT_FIRST_SPECIES_COUNT):
+            self.robot_species(numRobots//ROBOT_FIRST_SPECIES_COUNT)
 
         self.mutation_rate = MUTATION_RATE
 
@@ -31,6 +26,24 @@ class Creator:
         self.avg_vision = 0
         self.avg_fail_rot = 0
     
+
+    def robot_species(self, n):
+        species_vel =random.uniform(MIN_FIRST_VELOCITY,MAX_FIRST_VELOCITY)
+        species_rot_vel = random.uniform(MIN_FIRST_ROT_VELOCITY,MAX_FIRST_ROT_VELOCITY)
+        species_vision = random.randint(MIN_FIRST_VISION,MAX_FIRST_VISION)
+        species_prob_fail_rot = random.randint(MIN_FIRST_FAIL_ROT,MAX_FIRST_FAIL_ROT)
+        species_life = random.randint(MIN_LIFE,MAX_LIFE)
+
+        self.P += [robot.Robot(i+len(self.P),random.randint(0,SCREEN_WIDTH),random.randint(0,SCREEN_HEIGHT), self.F, self.dic_F, \
+                    velocity=species_vel,
+                    rot_vel=species_rot_vel,
+                    vision=species_vision,
+                    prob_fail_rot=species_prob_fail_rot,
+                    life=species_life)
+                    for i in range(n)]
+                
+
+
     def update(self):
 
         self.avg_velocity = self.avg_velocity/len(self.P) if len(self.P) > 0 else 0
@@ -49,31 +62,22 @@ class Creator:
             self.F.append(food.Food(random.randint(0,1000),random.randint(0,800),pygame.Color(0,255,0)))
             self.dic_F.add(self.F[-1])
 
-        for f in self.F:
+        for f in self.F[:]:
             if f.time > f.death_time:
                 self.dic_F.remove(f)
                 self.F.pop(self.F.index(f))
-            if f.time > f.child_time and f.can_reproduce: #and len(self.F) < 3000:
+            if f.time > f.child_time and f.can_reproduce and len(self.F) < 10000:
                 self.F.append(f.gen_new())
                 self.dic_F.add(self.F[-1])
                 f.time = 0
 
-        for p in self.P:
+        for p in self.P[:]:
 
             self.avg_velocity += p.velocity
             self.avg_rot_vel += p.rot_vel
             self.avg_vision += p.vision
             self.avg_fail_rot += p.prob_fail_rot
             p.update()
-
-            if self.F != []:
-                if p.rect.colliderect(self.F[p.closest].rect):
-                    p.food_eaten += 1
-                    p.life += 50
-                    self.dic_F.remove(self.F[p.closest])
-                    self.F.pop(p.closest)
-            
-            
             
             if p.food_eaten >= p.food_to_reproduce:
                 self.P.append(robot.Robot(p.id,p.rect.x,p.rect.y, self.F,self.dic_F,\
@@ -90,9 +94,16 @@ class Creator:
                 self.P.pop(self.P.index(p))
         
 
-    def draw(self,surface, camera_offset=(0,0)):
+    def draw(self,surface, camera_offset=[0,0,False]):
+        r = []
         self.update()
         for p in self.P:
+
+            if(camera_offset[2]):
+                r.append([p.velocity,p.rot_vel,p.vision,p.prob_fail_rot])
+            
             p.draw(surface, camera_offset)
         for f in self.F:
             f.draw(surface, camera_offset)
+        
+        return r

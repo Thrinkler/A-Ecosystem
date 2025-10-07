@@ -12,10 +12,10 @@ class Robot(pygame.sprite.Sprite):
         super().__init__() 
         self.id = id
         self.rect = pygame.Rect(x,y,ROBOTS_SIZE,ROBOTS_SIZE)
-        self.color = pygame.Color(((50+int(velocity)*20) if velocity*20 < 200 else 255,\
+        self.color = pygame.Color(((50+int(abs(velocity)*20) if abs(velocity)*20 < 200 else 255),\
                                    (vision) if vision < 250 else 255,\
-                                   (50+int(rot_vel)*20 if rot_vel*20 < 200 else 255)))
-        
+                                   (50+int(abs(rot_vel)*20) if abs(rot_vel)*20 < 200 else 255)))
+
         self.food = food
         self.dict_food = dict_food
 
@@ -28,7 +28,8 @@ class Robot(pygame.sprite.Sprite):
         self.prob_fail_rot = prob_fail_rot
 
         self.timeout = False
-        self.closest = 0
+
+        self.target_food = None
 
         self.food_eaten = 0
         self.food_to_reproduce = random.randint(2,5)
@@ -37,13 +38,6 @@ class Robot(pygame.sprite.Sprite):
 
         self.food_to_reproduce = random.randint(2,5)
     
-    def vector_to_ind(self, ind):
-        if(ind >= len(self.food)):
-            ind = 0
-        
-        if len(self.food) == 0:
-            return [random.randint(-1,1),random.randint(-1,1)]
-        return [self.food[ind].rect.x - self.rect.x, self.food[ind].rect.y - self.rect.y]
     
     def vector_to_food(self, food: food.Food):
         if food is None:
@@ -51,24 +45,20 @@ class Robot(pygame.sprite.Sprite):
         return [food.rect.x - self.rect.x, food.rect.y - self.rect.y]
 
     def find_closest_food(self,food_list: list[food.Food]):
-        
-        x,y = self.vector_to_ind(self.closest)
+        if self.target_food is not None:
+            x,y = self.vector_to_food(self.target_food)
         closest_distance = math.inf
 
-        self.closest = -1
+        
+        self.target_food = None
         if len(food_list)==0:
             return
-        
-        closest = None
 
         for food in food_list:
             x,y = self.vector_to_food(food)
             if x**2 + y**2 < closest_distance:
                 closest_distance = x**2 + y**2
-                closest = food
-        
-        if closest is not None:
-            self.closest = self.food.index(closest)
+                self.target_food = food
 
 
     def closest_food(self):
@@ -103,28 +93,35 @@ class Robot(pygame.sprite.Sprite):
 
         self.find_closest_food(close_food)
     
+    def close(self):
+        if self.target_food is None:
+            return 1
+        
+        dist = self.vector_to_food(self.target_food)
+        distance = dist[0]**2 + dist[1]**2
+        return distance/(self.vision**2*2) + 0.75 if self.vision> 0 else 1
 
-    def square(self):
-        for i in range(0,self.vision):
-            for j in range(0,i):
-                pass
 
-
-    def angle_to_food(self, ind):
-        x,y = self.vector_to_ind(ind)
+    def angle_to_food(self, food):
+        x,y = self.vector_to_food(food)
 
         if x**2 + y**2 > self.vision**2:
             return self.angle + math.pi/2 * random.randint(-10,10)*0.1
+        
         return math.atan2(y,x)* (1 if random.randint(0,100) < self.prob_fail_rot else 0)
         
     def draw(self, surface, camera_offset=(0,0)):
 
-        #x1,y1 = self.rect.x+self.rect.width//2 ,self.rect.y+self.rect.width//2 
-        #x2, y2 = self.rect.x+self.rect.width//2+(math.cos(self.angle)*10*10),self.rect.y+self.rect.width//2+(math.sin(self.angle)*10*10)
+        x1,y1 = self.rect.x+self.rect.width//2 ,self.rect.y+self.rect.width//2 
+        x2, y2 = self.rect.x+self.rect.width//2+(math.cos(self.angle)*self.vision//2),self.rect.y+self.rect.width//2+(math.sin(self.angle)*self.vision//2)
 
-        pygame.draw.rect(surface, self.color, self.rect.move(-camera_offset[0], -camera_offset[1]), width=0)
-
+        
         #pygame.draw.line(surface,pygame.color.Color(0,0,0),(x1,y1),(x2,y2))
+
+        #pygame.draw.circle(surface, self.color, (self.rect.x+self.rect.width//2 - camera_offset[0],self.rect.y+self.rect.width//2 - camera_offset[1]), self.vision//2, width=0)
+        pygame.draw.rect(surface, pygame.color.Color(255,255,255), self.rect.move(-camera_offset[0], -camera_offset[1]), width=0)
+        
+        
 
     def wander(self):
         turn_strength = self.rot_vel*0.1
@@ -134,13 +131,19 @@ class Robot(pygame.sprite.Sprite):
         self.angle += angle
 
     def update(self):
-        self.closest_food()
-        if self.closest == -1:
+        close = self.close()
+        if len(self.food) > 0:
+            self.closest_food()
+        else:
+            self.target_food = None
+        
+        if self.target_food is None:
             self.wander()
         else:
-            self.move_to_food(self.closest)
-
-        move_angle = (math.cos(self.angle)*2*self.velocity*0.5,math.sin(self.angle)*2*self.velocity*0.5)
+            self.move_to_food(self.target_food)
+        
+        move_angle = (math.cos(self.angle)*self.velocity*close,math.sin(self.angle)*self.velocity*close)
+        
         self.rect.move_ip(move_angle if random.randint(0,100) < self.prob_fail_rot else (move_angle[0]*1.5, move_angle[1] *1.5))
         self.life -= random.randint(0,1)
         self.life -= 0.05*self.velocity * random.randint(0,1)
@@ -149,15 +152,29 @@ class Robot(pygame.sprite.Sprite):
         if self.life <= 0:
             self.timeout = True
 
-    def move_to_food(self, ind):
-        ang = self.angle_to_food(ind)
+        if self.food != []:
+                if self.target_food is not None and self.rect.colliderect(self.target_food.rect):
+                    self.food_eaten += 1
+                    self.life += 50
+                    self.dict_food.remove(self.target_food)
+                    self.food.remove(self.target_food)
+
+    def move_to_food(self, food):
+
+        ang = self.angle_to_food(food)
         move_angle = ang - self.angle
         if move_angle > math.pi:
             move_angle -= 2 * math.pi
         elif move_angle < -math.pi:
             move_angle += 2 * math.pi
-        
-        self.change_angle(move_angle*0.05 * self.rot_vel*0.1)
+
+        distance_sq = self.vision**2
+        if self.target_food is not None:
+            dist_vector = self.vector_to_food(self.target_food)
+            distance_sq = dist_vector[0]**2 + dist_vector[1]**2
+        aggressiveness = 1.0 - (distance_sq / (self.vision**2 + 1e-6))
+        g = max(0, min(1, aggressiveness))
+        self.change_angle(move_angle*0.05 * self.rot_vel*g *0.6)
 
         return move_angle
 
