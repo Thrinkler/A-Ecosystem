@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-msft = pd.read_csv('logs/12.csv')
+msft = pd.read_csv('logs/sp_39.csv')
 time = range(len(msft))
 
 def time_plot():
@@ -62,6 +62,14 @@ def speed_vs_rotvel():
     plt.grid(True)
     plt.show()
 
+def rotvel_vs_failrot():
+    plt.plot(msft['avg_rot_vel'], msft['avg_fail_rot'])
+    plt.xlabel('Avg Rot Vel')
+    plt.ylabel('Avg Fail Rot')
+    plt.title('Avg Rot Vel vs Avg Fail Rot')
+    plt.grid(True)
+    plt.show()
+
 def vision_vs_failrot():
     plt.plot(msft['avg_vision'], msft['avg_fail_rot'])
     plt.xlabel('Avg Vision')
@@ -85,5 +93,6 @@ correlation_plot()
 food_vs_robots_plot()
 robots_characteristics_vs_robots_plot()
 speed_vs_rotvel()
+rotvel_vs_failrot()
 vision_vs_failrot()
 speed_vs_vision()

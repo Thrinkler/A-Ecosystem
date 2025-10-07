@@ -1,9 +1,11 @@
 from . import food
+from .settings import *
+
 class FoodSorter:
     def __init__(self, food_items: list[food.Food]):
         self.food_items = food_items
 
-        self.grid_size = 50
+        self.grid_size = GRID_CELL_SIZE
 
         self.food_dic = {}
         for f in self.food_items:

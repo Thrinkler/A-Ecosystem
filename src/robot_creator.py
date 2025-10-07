@@ -6,21 +6,25 @@ from . import food
 from . import create_files
 from . import food_sorter
 
+from .settings import *
+
 class Creator:
     def __init__(self, numRobots, numFoods):
         self.file = create_files.new_file()
 
-        self.F = [food.Food(random.randint(0,1000),random.randint(0,800),pygame.Color(0,255,0)) for i in range(numFoods)]
+        self.F = [food.Food(random.randint(0,SCREEN_WIDTH),random.randint(0,SCREEN_HEIGHT),pygame.Color(0,255,0)) for _ in range(numFoods)]
         self.dic_F = food_sorter.FoodSorter(self.F)
 
-        self.P = [robot.Robot(i,random.randint(0,800),random.randint(0,600), self.F, self.dic_F, \
-                    velocity=random.uniform(1,10), rot_vel=random.uniform(1,10), \
-                    vision = random.randint(50,100), prob_fail_rot= random.randint(50,100),
-                    life=random.randint(100,1000))\
+        self.P = [robot.Robot(i,random.randint(0,SCREEN_WIDTH),random.randint(0,SCREEN_HEIGHT), self.F, self.dic_F, \
+                    velocity=random.uniform(MIN_FIRST_VELOCITY,MAX_FIRST_VELOCITY), \
+                    rot_vel=random.uniform(MIN_FIRST_ROT_VELOCITY,MAX_FIRST_ROT_VELOCITY), \
+                    vision = random.randint(MIN_FIRST_VISION,MAX_FIRST_VISION),\
+                    prob_fail_rot= random.randint(MIN_FIRST_FAIL_ROT,MAX_FIRST_FAIL_ROT),
+                    life=random.randint(MIN_LIFE,MAX_LIFE))\
                     for i in range(numRobots)]
-        
-        
-        self.mutation_rate = 0.1
+
+
+        self.mutation_rate = MUTATION_RATE
 
         self.avg_velocity = 0
         self.avg_rot_vel = 0
@@ -41,7 +45,7 @@ class Creator:
         self.avg_vision = 0
         self.avg_fail_rot = 0
 
-        if random.randint(0,100) > 98:
+        if random.uniform(0, 1) > 1 - FOOD_SPAWN_RATE/100:
             self.F.append(food.Food(random.randint(0,1000),random.randint(0,800),pygame.Color(0,255,0)))
             self.dic_F.add(self.F[-1])
 
@@ -49,7 +53,7 @@ class Creator:
             if f.time > f.death_time:
                 self.dic_F.remove(f)
                 self.F.pop(self.F.index(f))
-            if f.time > f.child_time: #and len(self.F) < 3000:
+            if f.time > f.child_time and f.can_reproduce: #and len(self.F) < 3000:
                 self.F.append(f.gen_new())
                 self.dic_F.add(self.F[-1])
                 f.time = 0
@@ -60,8 +64,7 @@ class Creator:
             self.avg_rot_vel += p.rot_vel
             self.avg_vision += p.vision
             self.avg_fail_rot += p.prob_fail_rot
-            p.closest_food()
-            p.move_to_food(p.closest)
+            p.update()
 
             if self.F != []:
                 if p.rect.colliderect(self.F[p.closest].rect):
@@ -78,7 +81,7 @@ class Creator:
                         rot_vel=p.rot_vel+(random.uniform(-1,1) if random.randint(0,10)< self.mutation_rate*10 else 0),\
                         vision=p.vision+(random.randint(-10,10) if random.randint(0,10)< self.mutation_rate*10 else 0), \
                         prob_fail_rot=p.prob_fail_rot+(random.randint(-10,10) if random.randint(0,10)< self.mutation_rate*10 else 0),\
-                            life=random.randint(100,1000)))
+                            life=random.randint(MIN_LIFE,MAX_LIFE)))
 
                 p.food_eaten = 0
                 p.food_to_reproduce += random.randint(2,5)
